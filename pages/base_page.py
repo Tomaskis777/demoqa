@@ -18,6 +18,12 @@ class BasePage:
     def get_url(self):
         return self.driver.current_url
 
+    def equal_url(self):
+        if self.get_url() == self.base_url:
+            return True
+        else:
+            return False
+
     # def equal_url(selfs):
     #     if selfs.get_url() == 'https://demoqa.com/':
     #         return True

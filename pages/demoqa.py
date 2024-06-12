@@ -29,9 +29,3 @@ class DemoQa(BasePage):
 
     def click_on_the_btn(self):
             self.find_element(locator='#app > div > div > div.home-body > div div:nth-child(1)').click()
-
-    def equal_url(self):
-        if self.get_url() == self.base_url:
-            return True
-        else:
-            return False
