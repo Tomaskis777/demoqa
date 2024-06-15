@@ -18,3 +18,4 @@
 #
 #     el_page.visit()
 #     assert el_page.text_elements.get_text == 'Please select an item from left to start practice.'
+
