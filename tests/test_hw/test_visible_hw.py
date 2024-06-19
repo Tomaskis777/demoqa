@@ -30,3 +30,4 @@ def test_visible_accordion_default2(browser):
     element_page.visit()
     # assert element_page.ac_element3.visible()
     assert not element_page.ac_element3.visible()
+
