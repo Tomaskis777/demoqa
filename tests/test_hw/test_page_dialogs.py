@@ -22,3 +22,4 @@ def test_navigation_modal(browser):
     time.sleep(2)
     assert browser.title == 'DEMOQA'
     browser.set_window_size(1000, 1000)
+
