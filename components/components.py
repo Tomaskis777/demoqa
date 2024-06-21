@@ -9,6 +9,9 @@ class WebElement:
     def click(self):
         self.find_element().click()
 
+    def click_force(self):
+        self.driver.execute_script('arguments[0].click();', self.find_element())
+
     def find_element(self):
         return self.driver.find_element(By.CSS_SELECTOR, self.locator)
 
