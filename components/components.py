@@ -16,10 +16,10 @@ class WebElement:
         self.driver.execute_script('arguments[0].click();', self.find_element())
 
     def find_element(self):
-        return self.driver.find_element(By.CSS_SELECTOR, self.locator)
+        return self.driver.find_element(self.get_by_type(), self.locator)
 
     def find_elements(self):
-        return self.driver.find_elements(By.CSS_SELECTOR, self.locator)
+        return self.driver.find_elements(self.get_by_type(), self.locator)
 
     def exist(self):
         try:
@@ -54,6 +54,12 @@ class WebElement:
         if len(value) > 0:
             return value
         return True
+
+    def scroll_to_element(self):
+        self.driver.execute_script(
+            'window.scrollTo(0, document.body.scrollHeight);',
+            self.find_element()
+        )
 
     def get_by_type(self):
         if self.locator_type == 'id':
