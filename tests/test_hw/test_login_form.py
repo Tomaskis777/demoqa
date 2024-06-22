@@ -1,7 +1,7 @@
 # import time
-#
-# from pages.form_page import FormPage
-#
+
+from pages.form_page import FormPage
+
 # def test_login_form(browser):
 #     form_page = FormPage(browser)
 #
@@ -21,3 +21,9 @@
 #
 #     assert form_page.modal_dialog.exist()
 #     form_page.btn_close_modal.click_force()
+
+# def test_state(browser):
+#     state_page = FormPage(browser)
+#
+#     state_page.visit()
+#     state_page.login_forma.send_keys('Russia')

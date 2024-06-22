@@ -23,3 +23,5 @@ class FormPage(BasePage):
         self.login_forma2 = WebElement(driver, '#lastName')
         self.login_forma3 = WebElement(driver, '#userEmail')
         self.login_forma4 = WebElement(driver,'#userForm')
+        self.login_forma6 = WebElement(driver, '#state')
+
