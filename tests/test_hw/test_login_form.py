@@ -22,8 +22,8 @@ from pages.form_page import FormPage
 #     assert form_page.modal_dialog.exist()
 #     form_page.btn_close_modal.click_force()
 
-# def test_state(browser):
-#     state_page = FormPage(browser)
-#
-#     state_page.visit()
-#     state_page.login_forma.send_keys('Russia')
+def test_state(browser):
+    state_page = FormPage(browser)
+
+    state_page.visit()
+    state_page.login_forma.send_keys('Russia')
