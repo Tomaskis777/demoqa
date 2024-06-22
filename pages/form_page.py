@@ -19,3 +19,7 @@ class FormPage(BasePage):
 
         self.hobbies = WebElement(driver, '#hobbies-checkbox-1')
         self.current_address = WebElement(driver, '#currentAddress')
+        self.login_forma = WebElement(driver, '#firstName')
+        self.login_forma2 = WebElement(driver, '#lastName')
+        self.login_forma3 = WebElement(driver, '#userEmail')
+        self.login_forma4 = WebElement(driver,'#userForm')
