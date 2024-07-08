@@ -1,4 +1,7 @@
 # import time
+import time
+
+from selenium.webdriver import Keys
 
 from pages.form_page import FormPage
 
@@ -22,8 +25,14 @@ from pages.form_page import FormPage
 #     assert form_page.modal_dialog.exist()
 #     form_page.btn_close_modal.click_force()
 
-def test_state(browser):
-    state_page = FormPage(browser)
 
-    state_page.visit()
-    state_page.login_forma.send_keys('Russia')
+# def test_state(browser):
+#     state_page = FormPage(browser)
+#
+#     state_page.visit()
+#     time.sleep(2)
+#     state_page.btn_state.scroll_to_element()
+#     time.sleep(2)
+#     state_page.inp_state.send_keys('NCR')
+#     state_page.inp_state.clear()
+#     time.sleep(2)
