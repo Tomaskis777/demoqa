@@ -9,4 +9,5 @@ class KoupAdd(BasePage):
         super().__init__(driver, self.base_url)
 
         self.btn_add = WebElement(driver, '#content > div > button')
+        self.btns_delete = WebElement(driver, "#elements > button")
 
