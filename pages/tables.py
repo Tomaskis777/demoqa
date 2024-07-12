@@ -10,3 +10,5 @@ class Tables(BasePage):
 
         self.no_data = WebElement(driver, 'div.rt-table')
         self.btn_delete_row = WebElement(driver, '#delete-record-1')
+        self.btn_delete2_row = WebElement(driver, '#delete-record-2')
+        self.btn_delete3_row = WebElement(driver, '#delete-record-3')
