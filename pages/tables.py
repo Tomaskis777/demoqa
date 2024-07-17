@@ -23,3 +23,9 @@ class Tables(BasePage):
         self.add_form6 = WebElement(driver, '#department')
         self.btn_edit = WebElement(driver, '#edit-record-4')
         self.btn_delete = WebElement(driver, '#delete-record-4')
+
+        self.btn = WebElement(driver, 'option:nth-child(1)')
+        self.btn_prev = WebElement(driver, 'div.-previous > button')
+        self.btn_next = WebElement(driver, 'div.-next > button')
+
+
