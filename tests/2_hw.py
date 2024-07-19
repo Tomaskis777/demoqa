@@ -14,4 +14,3 @@ def task_2(a=(1, 2, 3, 5, 8, 13, 21)):
     return a[1], a[2], a[3]
 
 print(task_2())
-
