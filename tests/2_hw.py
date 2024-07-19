@@ -17,3 +17,4 @@ def task_3(num: int):
 
 
 print(task_3(4))
+
