@@ -11,9 +11,8 @@ def task_2(a=(1, 2, 3, 5, 8, 13, 21)):
 
 print(task_2())
 
-
 def task_3(num: int):
     return num ** 2
 
 
-print(task_3(4))
+print(task_3(2))
