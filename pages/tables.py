@@ -28,4 +28,4 @@ class Tables(BasePage):
         self.btn_prev = WebElement(driver, 'div.-previous > button')
         self.btn_next = WebElement(driver, 'div.-next > button')
 
-
+        self.button_tables = WebElement(driver, 'div:nth-child(1) > div.rt-resizable-header-content')
