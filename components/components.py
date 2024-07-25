@@ -46,6 +46,7 @@ class WebElement:
         self.send_keys(Keys.CONTROL + 'a')
         self.send_keys(Keys.DELETE)
         self.send_keys(Keys.ENTER)
+        self.send_keys(Keys.ARROW_RIGHT)
 
     def get_dom_attribute(self, name: str):
         value = self.find_element().get_dom_attribute(name)
