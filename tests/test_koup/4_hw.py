@@ -13,7 +13,7 @@ class Rectangle:
 condition1 = Rectangle(5, 5)
 condition2 = Rectangle(3, 6)
 
-print(condition1.area_rectangle())
+print( condition1.area_rectangle())
 print(condition2.perimetr_rectangle())
 
 
