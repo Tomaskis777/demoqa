@@ -20,22 +20,7 @@ class Car:
         self.color = color
 
 
-my_car = Car("красный", "седан", 2023)
-
-# # запуск автомобиля
-# my_car.start()
-#
-# # отключение автомобиля
-# my_car.stop()
-#
-# # присвоение автомобилю года выпуска
-# my_car.set_year(2024)
-#
-# # присвоение автомобилю типа
-# my_car.set_type("хэтчбек")
-#
-# # присвоение автомобилю цвета
-# my_car.set_color("синий")
+my_car = Car('Желтый', 'Пикап', '2020')
 
 print(my_car.start())
 print(my_car.stop())
