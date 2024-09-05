@@ -1,5 +1,3 @@
-from selenium.webdriver.common.by import By
-
 # class Rectangle:
 #     def __init__(self, width, height):
 #         self.width = width
@@ -57,31 +55,42 @@ from selenium.webdriver.common.by import By
 # print(methods4.math_method4())
 
 
-class Button:
-    def __init__(self, text,  link, loc):
-        self.text = text
-        self.link = link
-        self.loc = loc
-
-    def click(self):
-        return 'Клик по локатору - {}'.format(self.loc)
-
-driver.get("https://demoqa.com/text-box")
-buttons = driver.find_elements_by_xpath("//div[@class='sidebar']//button")
-
-
-class Button:
+class Button2level:
     def __init__(self, text):
         self.text = text
+        self.type = "Кнопка"
+        self.locator = ''
 
     def click(self):
         return f"Клик по кнопке {self.text}"
 
-driver.get("https://demoqa.com/text-box")
 
-buttons = driver.find_elements_by_xpath("//div[@class='sidebar']//button")
-for button in buttons:
-    button_text = button.text
-    print(f"{button_text}")
-    button = Button(button_text)
-    button.click()
+button_1 = Button2level("Text Box")
+button_2 = Button2level("Checkbox")
+button_3 = Button2level("Radio-button")
+button_4 = Button2level("Webtables")
+button_5 = Button2level("Buttons")
+button_6 = Button2level("Links")
+button_7 = Button2level("Broken")
+button_8 = Button2level("Upload-download")
+button_9 = Button2level("Dynamic-properties")
+
+print(button_1.text)
+print(button_2.text)
+print(button_3.text)
+print(button_4.text)
+print(button_5.text)
+print(button_6.text)
+print(button_7.text)
+print(button_8.text)
+print(button_9.text)
+
+print(button_1.click())
+print(button_2.click())
+print(button_3.click())
+print(button_4.click())
+print(button_5.click())
+print(button_6.click())
+print(button_7.click())
+print(button_8.click())
+print(button_9.click())
