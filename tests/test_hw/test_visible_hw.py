@@ -1,6 +1,6 @@
-from pages.accordion import Accordion
+# from pages.accordion import Accordion
 # import time
-
+#
 # def test_visible_accordion(browser):
 #     element_page = Accordion(browser)
 #
@@ -9,7 +9,7 @@ from pages.accordion import Accordion
 #     time.sleep(2)
 #     # assert element_page.acord_element.visible()
 #     assert not element_page.acord_element.visible()
-
+#
 # def test_visible_accordion_default(browser):
 #     element_page = Accordion(browser)
 #
@@ -30,4 +30,4 @@ from pages.accordion import Accordion
 #     element_page.visit()
 #     # assert element_page.ac_element3.visible()
 #     assert not element_page.ac_element3.visible()
-
+#

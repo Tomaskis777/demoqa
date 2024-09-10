@@ -10,3 +10,4 @@ class SwagLabs(BasePage):
 
         self.icon = WebElement(driver, '#root > div > div.login_logo')
         self.name = WebElement(driver, '#user-name')
+        self.password = WebElement(driver, '#password')
