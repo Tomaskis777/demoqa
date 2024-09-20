@@ -24,5 +24,6 @@ class FormPage(BasePage):
         self.login_forma3 = WebElement(driver, '#userEmail')
         self.login_forma4 = WebElement(driver, '#userForm')
         self.btn_state = WebElement(driver, '#state')
-        self.inp_state = WebElement(driver, '#react-select-3-input')
-        self.btn_NCR = WebElement(driver, "//*[contains(text(), 'NCR')]", 'xpath')
+        self.inp_state = WebElement(driver, '#state > div > div.css-1hwfws3 > div.css-1uccc91-singleValue')
+        self.btn_Rajasthan = WebElement(driver, "//*[contains(text(), 'Rajasthan')]", 'xpath')
+        self.scroll_el = WebElement(driver, '#state > div')
