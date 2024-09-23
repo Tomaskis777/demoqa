@@ -29,3 +29,9 @@ class Tables(BasePage):
         self.btn_next = WebElement(driver, 'div.-next > button')
 
         self.button_tables = WebElement(driver, 'div:nth-child(1) > div.rt-resizable-header-content')
+        self.button_tables2 = WebElement(driver, 'div:nth-child(2) > div.rt-resizable-header-content')
+        self.button_tables3 = WebElement(driver, 'div:nth-child(3) > div.rt-resizable-header-content')
+        self.button_tables4 = WebElement(driver, 'div:nth-child(4) > div.rt-resizable-header-content')
+        self.button_tables5 = WebElement(driver, 'div:nth-child(5) > div.rt-resizable-header-content')
+        self.button_tables6 = WebElement(driver, 'div:nth-child(6) > div.rt-resizable-header-content')
+        self.button_tables7 = WebElement(driver, 'div:nth-child(7) > div.rt-resizable-header-content')

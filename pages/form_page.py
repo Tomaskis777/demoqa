@@ -25,5 +25,5 @@ class FormPage(BasePage):
         self.login_forma4 = WebElement(driver, '#userForm')
         self.btn_state = WebElement(driver, '#state')
         self.inp_state = WebElement(driver, '#state > div > div.css-1hwfws3 > div.css-1uccc91-singleValue')
-        self.btn_Rajasthan = WebElement(driver, "//*[@id="state"]/div/div[1]/div[1]", 'xpath')
+        self.btn_Rajasthan = WebElement(driver, "//*[contains(text(), 'Rajasthan')]", 'xpath')
         self.scroll_el = WebElement(driver, '#state > div')

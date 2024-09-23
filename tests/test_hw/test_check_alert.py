@@ -7,4 +7,4 @@
 #
 #     alert_page.visit()
 #     alert_page.alertsButton2.click()
-#     time.sleep(10)
+#     time.sleep(12)
