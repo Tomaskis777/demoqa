@@ -15,17 +15,16 @@
 #     print('Пустая строка')
 
 
-numb_break = 0
-while numb_break < 5:
-    numb_break += 1
-    if numb_break == 3:
-        break
-    print(f'num_break= {numb_break}')
-
-numb_continue = 0
-while numb_continue < 5:
-    numb_continue += 1
-    if numb_continue == 3:
-        continue
-    print(f'numb_continue = {numb_continue}')
-
+# numb_break = 0
+# while numb_break < 5:
+#     numb_break += 1
+#     if numb_break == 3:
+#         break
+#     print(f'num_break= {numb_break}')
+#
+# numb_continue = 0
+# while numb_continue < 5:
+#     numb_continue += 1
+#     if numb_continue == 3:
+#         continue
+#     print(f'numb_continue = {numb_continue}')
