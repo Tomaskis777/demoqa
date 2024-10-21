@@ -1,10 +1,11 @@
-class Person:
-    def __init__(self, firs_name, last_name):
-        self.first_name =firs_name
-        self.last_name = last_name
+class Vehicle:
+    def __init__(self, make, model, year, price):
+        self.make = make
+        self.model = model
+        self.year = year
+        self.price = price
 
-
-class Student(Person):
-    def __init__(self, course, firs_name, last_name):
-        self.course = course
-        super().__init__(firs_name,last_name)
+def print_info(self):
+    print(f'Марка: {self.make}'
+    f'\nМодель: {self.model}'
+    f'\nГод выпуска: {self.model}'
