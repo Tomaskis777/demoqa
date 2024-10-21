@@ -8,4 +8,3 @@ class Student(Person):
     def __init__(self, course, firs_name, last_name):
         self.course = course
         super().__init__(firs_name,last_name)
-
