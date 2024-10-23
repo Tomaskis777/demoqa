@@ -18,3 +18,4 @@ class Employee:
 
 employee = Employee(100, 10)
 print(employee.annual_salary())
+
