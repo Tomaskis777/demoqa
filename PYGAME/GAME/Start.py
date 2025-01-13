@@ -35,13 +35,13 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-# screen.fill((0, 0, 0))
-# pygame.draw.rect(screen, color, (50, 50, 100, 100))
-#
-# pygame.display.flip()
-# clock.tick(60)
-#
-# pygame.quit()
-#
-# pygame.draw.line(screen, (255, 255, 255), (0, 0), (100, 100), 5)
+screen.fill((0, 0, 0))
+pygame.draw.rect(screen, color, (50, 50, 100, 100))
+
+pygame.display.flip()
+clock.tick(60)
+
+pygame.quit()
+
+pygame.draw.line(screen, (255, 255, 255), (0, 0), (100, 100), 5)
 
