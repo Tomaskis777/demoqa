@@ -19,16 +19,19 @@ def draw_square(screen, size, position):
     pygame.draw.rect(screen, black, (position, size))
 
 
-def update_position(objects):
+def update_position(objects, min_x, max_x, min_y, max_y):
     for obj in objects:
         obj['center'][0] += obj['speed_x']
         obj['center'][1] += obj['speed_y']
 
-        if obj['center'][0] > 500 - obj["radius"] or obj['center'][0] < obj["radius"]:
+        if obj['center'][0] > max_x - obj["radius"] or obj['center'][0] < min_x + obj["radius"]:
             obj["speed_x"] = -obj["speed_x"]
-        if obj['center'][1] > 50 - obj["radius"] or obj["center"][1] < obj["radius"]:
+        if obj['center'][1] > max_y - obj["radius"] or obj["center"][1] < min_y + obj["radius"]:
             obj["speed_y"] = -obj["speed_y"]
 
+
+# min_x, max_x = 20, 700
+# min_y, max_y = 50, 550
 
 circles = [
     {"center": (400, 200), "radius": 50},
@@ -36,9 +39,12 @@ circles = [
     {"center": (400, 420), "radius": 90}
 ]
 
-circles2 = [
-     {"center": [379, 200], "radius": 10, "speed_x": 1, "speed_y": 0},
-     {"center": [420, 200], "radius": 10, "speed_x": 1, "speed_y": 0}
+left_circles = [
+     {"center": [379, 200], "radius": 10, "speed_x": 0.01, "speed_y": 0},
+]
+
+right_circles = [
+     {"center": [415, 200], "radius": 10, "speed_x": 0.01, "speed_y": 0},
 ]
 
 squares = [
@@ -63,10 +69,15 @@ while running:
     for circle in circles:
         draw_white_circle(screen, circle["center"], circle["radius"])
 
-    for circle in circles2:
+    for circle in left_circles:
         draw_black_circle(screen, circle["center"], circle["radius"])
 
-    update_position(circles2)
+    update_position(left_circles, 369, 400, 150, 300)
+
+    for circle in right_circles:
+        draw_black_circle(screen, circle["center"], circle["radius"])
+
+    update_position(right_circles, 405, 436, 150, 300)
 
     for rect in squares:
         draw_square(screen, rect["position"], rect["size"])
