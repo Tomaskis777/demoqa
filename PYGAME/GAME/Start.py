@@ -1,7 +1,5 @@
 import pygame
-import sys
 pygame.init()
-
 
 
 def draw_white_circle(screen, center, radius):
@@ -17,6 +15,24 @@ def draw_black_circle(screen, center, radius):
 def draw_square(screen, size, position):
     black = (0, 0, 0)
     pygame.draw.rect(screen, black, (position, size))
+
+
+def draw_hand(surface, position):
+    skin_color = (255, 255, 255)
+    pygame.draw.rect(surface, skin_color, (*position, 50, 100))
+
+    finger_positions = [
+        (position[0] + 3, position[1] - 11, 6, 40),
+        (position[0] + 13, position[1] - 18, 7, 50),
+        (position[0] + 23, position[1] - 30, 7, 40),
+        (position[0] + 33, position[1] - 25, 7, 30),
+        (position[0] + 45, position[1] - 12, 9, 35),
+
+    ]
+
+    for finger in finger_positions:
+        pygame.draw.rect(surface, skin_color, finger)
+        pygame.draw.rect(surface, finger, (*position, 50, 0))
 
 
 def update_position(objects, min_x, max_x, min_y, max_y):
@@ -51,11 +67,15 @@ squares = [
     {"position": (60, 85), "size": (370, 75)},
 ]
 
-pygame.init()
+hand_surface = pygame.Surface((100, 150), pygame.SRCALPHA)
+hand_position = [25, 50]
+draw_hand(hand_surface, hand_position)
+
+rotated_hand_surface = pygame.transform.rotate(hand_surface, 90)
+rotated_hand_rect = rotated_hand_surface.get_rect(center=(200, 200))
 
 screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Моя первая игра")
-
 
 
 running = True
@@ -82,9 +102,9 @@ while running:
     for rect in squares:
         draw_square(screen, rect["position"], rect["size"])
 
+    rotated_hand_rect.topleft = [190, 245]
+    screen.blit(rotated_hand_surface, rotated_hand_rect)
+
     pygame.display.flip()
 
 pygame.quit()
-
-
-
