@@ -17,15 +17,15 @@ def draw_square(screen, size, position):
     pygame.draw.rect(screen, black, (position, size))
 
 
-def draw_hand(surface, position, skin_color):
-    pygame.draw.rect(surface, skin_color, (*position, 50, 100))
+def draw_hand(surface, position, width, height, skin_color):
+    pygame.draw.rect(surface, skin_color, (*position, width, height,))
 
     finger_positions = [
-        (position[0] + 5, position[1] - 20, 10, 40),
-        (position[0] + 20, position[1] - 30, 10, 50),
-        (position[0] + 35, position[1] - 20, 10, 40),
-        (position[0] + 45, position[1] - 10, 10, 30),
-        (position[0] + 5, position[1] + 100, 10, 30)
+        (position[0] + -1, position[1] - 15, 8, 40),  # мизинец
+        (position[0] + 10, position[1] - 20, 10, 50),  # безымянный
+        (position[0] + 23, position[1] - 32, 10, 40),  # средний
+        (position[0] + 45, position[1] - 10, 10, 30),  # большой
+        (position[0] + 35, position[1] - 24, 9, 30)    # указательный
     ]
 
     for finger in finger_positions:
@@ -53,25 +53,28 @@ circles = [
 ]
 
 left_circles = [
-     {"center": [379, 200], "radius": 10, "speed_x": 0.01, "speed_y": 0},
+     {"center": [379, 200], "radius": 10, "speed_x": 0.03, "speed_y": 0},
 ]
 
 right_circles = [
-     {"center": [415, 200], "radius": 10, "speed_x": 0.01, "speed_y": 0},
+     {"center": [415, 200], "radius": 10, "speed_x": 0.03, "speed_y": 0},
 ]
 
 squares = [
     {"position": (60, 85), "size": (370, 75)},
 ]
 
+hand_width = 50
+hand_height = 240
+
 hand_position = [25, 50]
 skin_color = (255, 255, 255)
-hand_surface = pygame.Surface((100, 150), pygame.SRCALPHA)
-draw_hand(hand_surface, hand_position, skin_color)
+hand_surface = pygame.Surface((100, 240), pygame.SRCALPHA)
+draw_hand(hand_surface, hand_position, hand_width, hand_height, skin_color)
 
 
-angle = 0
-angle_speed = 0.050  # Скорость поворота
+angle = 40
+angle_speed = 0.08  # Скорость поворота
 center_position = [550, 400]
 
 
@@ -104,11 +107,11 @@ while running:
         draw_square(screen, rect["position"], rect["size"])
 
     angle += angle_speed
-    if angle >= 90 or angle <= 0:
+    if angle >= 90 or angle <= 38:
         angle_speed = -angle_speed
 
     rotated_hand_surface = pygame.transform.rotate(hand_surface, angle)
-    rotated_hand_rect = rotated_hand_surface.get_rect(midbottom=(340, 360))
+    rotated_hand_rect = rotated_hand_surface.get_rect(midbottom=(335, 370))
 
     # rotated_hand_rect.topright = [175, 140]
     screen.blit(rotated_hand_surface, rotated_hand_rect)
