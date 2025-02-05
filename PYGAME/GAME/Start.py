@@ -17,19 +17,27 @@ def draw_square(screen, size, position):
     pygame.draw.rect(screen, black, (position, size))
 
 
-def draw_hand(surface, position, skin_color):
-    pygame.draw.rect(surface, skin_color, (*position, 50, 100))
+def draw_hand(surface, position, width, height, skin_color):
+    pygame.draw.rect(surface, skin_color, (*position, width, height,))
 
     finger_positions = [
-        (position[0] + 5, position[1] - 20, 10, 40),
-        (position[0] + 20, position[1] - 30, 10, 50),
-        (position[0] + 35, position[1] - 20, 10, 40),
-        (position[0] + 45, position[1] - 10, 10, 30),
-        (position[0] + 5, position[1] + 100, 10, 30)
+        (position[0] + -1, position[1] - 15, 5, 40),  # мизинец
+        (position[0] + 8, position[1] - 20, 7, 50),  # безымянный
+        (position[0] + 19, position[1] - 32, 8, 40),  # средний
+        (position[0] + 41, position[1] - 10, 8, 30),  # большой
+        (position[0] + 30, position[1] - 24, 8, 30)    # указательный
     ]
 
     for finger in finger_positions:
         pygame.draw.rect(surface, skin_color, finger)
+
+
+def draw_speech_bubble(screen, position, text, font, text_color, bg_color):
+    text_surface = font.render(text, True, text_color)
+    text_rect = text_surface.get_rect()
+    bubble_rect = pygame.Rect(position[0], position[1], text_rect.width + 55, text_rect.height + 30)
+    pygame.draw.rect(screen, bg_color, bubble_rect, border_radius=18)
+    screen.blit(text_surface, (bubble_rect.x + 30, bubble_rect.y + 17))
 
 
 def update_position(objects, min_x, max_x, min_y, max_y):
@@ -39,12 +47,9 @@ def update_position(objects, min_x, max_x, min_y, max_y):
 
         if obj['center'][0] > max_x - obj["radius"] or obj['center'][0] < min_x + obj["radius"]:
             obj["speed_x"] = -obj["speed_x"]
-        if obj['center'][1] > max_y - obj["radius"] or obj["center"][1] < min_y + obj["radius"]:
+        if obj['center'][1] > max_y - obj["radius"] or obj['center'][1] < min_y + obj["radius"]:
             obj["speed_y"] = -obj["speed_y"]
 
-
-# min_x, max_x = 20, 700
-# min_y, max_y = 50, 550
 
 circles = [
     {"center": (400, 200), "radius": 50},
@@ -53,31 +58,34 @@ circles = [
 ]
 
 left_circles = [
-     {"center": [379, 200], "radius": 10, "speed_x": 0.01, "speed_y": 0},
+     {"center": [379, 200], "radius": 10, "speed_x": 0.02, "speed_y": 0},
 ]
 
 right_circles = [
-     {"center": [415, 200], "radius": 10, "speed_x": 0.01, "speed_y": 0},
+     {"center": [415, 200], "radius": 10, "speed_x": 0.02, "speed_y": 0},
 ]
 
 squares = [
     {"position": (60, 85), "size": (370, 75)},
 ]
 
+hand_width = 42
+hand_height = 240
+
 hand_position = [25, 50]
 skin_color = (255, 255, 255)
-hand_surface = pygame.Surface((100, 150), pygame.SRCALPHA)
-draw_hand(hand_surface, hand_position, skin_color)
+hand_surface = pygame.Surface((100, 240), pygame.SRCALPHA)
+draw_hand(hand_surface, hand_position, hand_width, hand_height, skin_color)
 
-
-angle = 0
-angle_speed = 0.050  # Скорость поворота
+angle = 40  # Угол начала движения руки
+angle_speed = 0.04  # Скорость поворота
 center_position = [550, 400]
-
 
 screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Моя первая игра")
 
+# Настройка шрифта для облачка
+font = pygame.font.Font(None, 45)  # Вы можете изменить размер шрифта по необходимости
 
 running = True
 while running:
@@ -104,14 +112,16 @@ while running:
         draw_square(screen, rect["position"], rect["size"])
 
     angle += angle_speed
-    if angle >= 90 or angle <= 0:
+    if angle >= 80 or angle <= 38:
         angle_speed = -angle_speed
 
     rotated_hand_surface = pygame.transform.rotate(hand_surface, angle)
-    rotated_hand_rect = rotated_hand_surface.get_rect(midbottom=(340, 360))
+    rotated_hand_rect = rotated_hand_surface.get_rect(midbottom=(335, 370))
 
-    # rotated_hand_rect.topright = [175, 140]
     screen.blit(rotated_hand_surface, rotated_hand_rect)
+
+    # Отрисовка облачка с текстом "HI"
+    draw_speech_bubble(screen, (475, 185), "'Привет!'", font, (0, 0, 0), (255, 255, 255))
 
     pygame.display.flip()
 
