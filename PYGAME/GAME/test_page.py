@@ -1,5 +1,6 @@
 import pygame
 pygame.init()
+import time
 
 
 def draw_white_circle(screen, center, radius):
@@ -87,6 +88,12 @@ pygame.display.set_caption("Моя первая игра")
 # Настройка шрифта для облачка
 font = pygame.font.Font(None, 45)  # Вы можете изменить размер шрифта по необходимости
 
+show_bubble = False
+bubble_interval = 2
+last_bubble_time = time.time()
+
+stop_movement = False
+
 running = True
 while running:
     for event in pygame.event.get():
@@ -98,31 +105,41 @@ while running:
     for circle in circles:
         draw_white_circle(screen, circle["center"], circle["radius"])
 
-    for circle in left_circles:
-        draw_black_circle(screen, circle["center"], circle["radius"])
+    if not stop_movement:
+        for circle in left_circles:
+            draw_black_circle(screen, circle["center"], circle["radius"])
 
-    update_position(left_circles, 369, 400, 150, 300)
+        for circle in left_circles:
+            draw_black_circle(screen, circle["center"], circle["radius"])
 
-    for circle in right_circles:
-        draw_black_circle(screen, circle["center"], circle["radius"])
+        update_position(left_circles, 369, 400, 150, 300)
 
-    update_position(right_circles, 405, 436, 150, 300)
+        for circle in right_circles:
+            draw_black_circle(screen, circle["center"], circle["radius"])
 
-    for rect in squares:
-        draw_square(screen, rect["position"], rect["size"])
+        update_position(right_circles, 405, 436, 150, 300)
 
-    angle += angle_speed
-    if angle >= 80 or angle <= 38:
-        angle_speed = -angle_speed
+        for rect in squares:
+            draw_square(screen, rect["position"], rect["size"])
 
-    rotated_hand_surface = pygame.transform.rotate(hand_surface, angle)
-    rotated_hand_rect = rotated_hand_surface.get_rect(midbottom=(335, 370))
+        angle += angle_speed
+        if angle >= 80 or angle <= 38:
+            angle_speed = -angle_speed
 
-    screen.blit(rotated_hand_surface, rotated_hand_rect)
+        rotated_hand_surface = pygame.transform.rotate(hand_surface, angle)
+        rotated_hand_rect = rotated_hand_surface.get_rect(midbottom=(335, 370))
 
-    # Отрисовка облачка с текстом "HI"
-    draw_speech_bubble(screen, (475, 185), "'Привет!'", font, (0, 0, 0), (255, 255, 255))
+        screen.blit(rotated_hand_surface, rotated_hand_rect)
+
+    current_time = time.time()
+    if current_time - last_bubble_time >= bubble_interval:
+        show_bubble = True
+        stop_movement = True
+
+    if show_bubble:
+        draw_speech_bubble(screen, (475, 185), "'Привет!'", font, (0, 0, 0), (255, 255, 255))
 
     pygame.display.flip()
 
 pygame.quit()
+

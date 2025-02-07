@@ -1,5 +1,6 @@
 import pygame
 pygame.init()
+import time
 
 
 def draw_white_circle(screen, center, radius):
@@ -87,6 +88,10 @@ pygame.display.set_caption("Моя первая игра")
 # Настройка шрифта для облачка
 font = pygame.font.Font(None, 45)  # Вы можете изменить размер шрифта по необходимости
 
+show_bubble = False
+bubble_interval = 3
+last_bubble_time = time.time()
+
 running = True
 while running:
     for event in pygame.event.get():
@@ -120,8 +125,13 @@ while running:
 
     screen.blit(rotated_hand_surface, rotated_hand_rect)
 
-    # Отрисовка облачка с текстом "HI"
-    draw_speech_bubble(screen, (475, 185), "'Привет!'", font, (0, 0, 0), (255, 255, 255))
+    current_time = time.time()
+    if current_time - last_bubble_time >= bubble_interval:
+        show_bubble = True
+        last_bubble_time = current_time
+
+    if show_bubble:
+        draw_speech_bubble(screen, (475, 185), "'Привет!'", font, (0, 0, 0), (255, 255, 255))
 
     pygame.display.flip()
 
