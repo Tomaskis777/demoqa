@@ -1,24 +1,25 @@
 import pygame
-pygame.init()
 import time
 
+pygame.init()
 
-def draw_white_circle(screen, center, radius):
+
+def draw_white_circle(screen, center, radius): #туловище снеговика
     white = (255, 255, 255)
     pygame.draw.circle(screen, white, center, radius)
 
 
-def draw_black_circle(screen, center, radius):
+def draw_black_circle(screen, center, radius): #глаза
     black = (0, 0, 0)
     pygame.draw.circle(screen, black, center, radius)
 
 
-def draw_square(screen, size, position):
+def draw_square(screen, size, position): #цилиндр на голове
     black = (0, 0, 0)
     pygame.draw.rect(screen, black, (position, size))
 
 
-def draw_hand(surface, position, width, height, skin_color):
+def draw_hand(surface, position, width, height, skin_color): #рука
     pygame.draw.rect(surface, skin_color, (*position, width, height,))
 
     finger_positions = [
@@ -33,7 +34,7 @@ def draw_hand(surface, position, width, height, skin_color):
         pygame.draw.rect(surface, skin_color, finger)
 
 
-def draw_speech_bubble(screen, position, text, font, text_color, bg_color):
+def draw_speech_bubble(screen, position, text, font, text_color, bg_color): #облачко с приветствием
     text_surface = font.render(text, True, text_color)
     text_rect = text_surface.get_rect()
     bubble_rect = pygame.Rect(position[0], position[1], text_rect.width + 55, text_rect.height + 30)
@@ -59,11 +60,11 @@ circles = [
 ]
 
 left_circles = [
-     {"center": [379, 200], "radius": 10, "speed_x": 0.02, "speed_y": 0},
+     {"center": [379, 200], "radius": 10, "speed_x": 0.01, "speed_y": 0},
 ]
 
 right_circles = [
-     {"center": [415, 200], "radius": 10, "speed_x": 0.02, "speed_y": 0},
+     {"center": [415, 200], "radius": 10, "speed_x": 0.01, "speed_y": 0},
 ]
 
 squares = [
@@ -89,8 +90,10 @@ pygame.display.set_caption("Моя первая игра")
 font = pygame.font.Font(None, 45)  # Вы можете изменить размер шрифта по необходимости
 
 show_bubble = False
-bubble_interval = 3
+bubble_interval = 3.72
 last_bubble_time = time.time()
+
+stop_movement = False
 
 running = True
 while running:
@@ -116,18 +119,37 @@ while running:
     for rect in squares:
         draw_square(screen, rect["position"], rect["size"])
 
-    angle += angle_speed
-    if angle >= 80 or angle <= 38:
-        angle_speed = -angle_speed
+    if not stop_movement:
+        update_position(left_circles, 369, 400, 150, 300)
+        update_position(right_circles, 405, 436, 150, 300)
 
-    rotated_hand_surface = pygame.transform.rotate(hand_surface, angle)
-    rotated_hand_rect = rotated_hand_surface.get_rect(midbottom=(335, 370))
+        angle += angle_speed
+        if angle >= 80 or angle <= 38:
+            angle_speed = -angle_speed
 
-    screen.blit(rotated_hand_surface, rotated_hand_rect)
+        rotated_hand_surface = pygame.transform.rotate(hand_surface, angle)
+        rotated_hand_rect = rotated_hand_surface.get_rect(midbottom=(335, 370))
+
+        screen.blit(rotated_hand_surface, rotated_hand_rect)
+
+    else:
+        rotated_hand_surface = pygame.transform.rotate(hand_surface, angle)
+        rotated_hand_rect = rotated_hand_surface.get_rect(midbottom=(335, 445))
+        screen.blit(rotated_hand_surface, rotated_hand_rect)
+        angle = 120
+
+
 
     current_time = time.time()
     if current_time - last_bubble_time >= bubble_interval:
         show_bubble = True
+        stop_movement = True
+        for circle in left_circles:
+            circle['speed_x'] = 0
+            circle['speed_y'] = 0
+        for circle in right_circles:
+            circle['speed_x'] = 0
+            circle['speed_y'] = 0
         last_bubble_time = current_time
 
     if show_bubble:

@@ -1,22 +1,19 @@
 import pygame
-pygame.init()
 import time
 
+pygame.init()
 
 def draw_white_circle(screen, center, radius):
     white = (255, 255, 255)
     pygame.draw.circle(screen, white, center, radius)
 
-
 def draw_black_circle(screen, center, radius):
     black = (0, 0, 0)
     pygame.draw.circle(screen, black, center, radius)
 
-
 def draw_square(screen, size, position):
     black = (0, 0, 0)
     pygame.draw.rect(screen, black, (position, size))
-
 
 def draw_hand(surface, position, width, height, skin_color):
     pygame.draw.rect(surface, skin_color, (*position, width, height,))
@@ -32,14 +29,12 @@ def draw_hand(surface, position, width, height, skin_color):
     for finger in finger_positions:
         pygame.draw.rect(surface, skin_color, finger)
 
-
 def draw_speech_bubble(screen, position, text, font, text_color, bg_color):
     text_surface = font.render(text, True, text_color)
     text_rect = text_surface.get_rect()
-    bubble_rect = pygame.Rect(position[0], position[1], text_rect.width + 55, text_rect.height + 30)
-    pygame.draw.rect(screen, bg_color, bubble_rect, border_radius=18)
-    screen.blit(text_surface, (bubble_rect.x + 30, bubble_rect.y + 17))
-
+    bubble_rect = pygame.Rect(position[0], position[1], text_rect.width + 20, text_rect.height + 20)
+    pygame.draw.rect(screen, bg_color, bubble_rect, border_radius=10)
+    screen.blit(text_surface, (bubble_rect.x + 10, bubble_rect.y + 10))
 
 def update_position(objects, min_x, max_x, min_y, max_y):
     for obj in objects:
@@ -51,7 +46,6 @@ def update_position(objects, min_x, max_x, min_y, max_y):
         if obj['center'][1] > max_y - obj["radius"] or obj['center'][1] < min_y + obj["radius"]:
             obj["speed_y"] = -obj["speed_y"]
 
-
 circles = [
     {"center": (400, 200), "radius": 50},
     {"center": (400, 300), "radius": 70},
@@ -59,11 +53,11 @@ circles = [
 ]
 
 left_circles = [
-     {"center": [379, 200], "radius": 10, "speed_x": 0.02, "speed_y": 0},
+    {"center": [379, 200], "radius": 10, "speed_x": 0.02, "speed_y": 0},
 ]
 
 right_circles = [
-     {"center": [415, 200], "radius": 10, "speed_x": 0.02, "speed_y": 0},
+    {"center": [415, 200], "radius": 10, "speed_x": 0.02, "speed_y": 0},
 ]
 
 squares = [
@@ -86,12 +80,14 @@ screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Моя первая игра")
 
 # Настройка шрифта для облачка
-font = pygame.font.Font(None, 45)  # Вы можете изменить размер шрифта по необходимости
+font = pygame.font.Font(None, 36)  # Вы можете изменить размер шрифта по необходимости
 
+# Переменные для управления появлением облачка
 show_bubble = False
-bubble_interval = 2
-last_bubble_time = time.time()
+bubble_interval = 3  # Промежуток времени в секундах до появления облачка
+bubble_appear_time = time.time() + bubble_interval
 
+# Переменные для остановки движения
 stop_movement = False
 
 running = True
@@ -105,18 +101,14 @@ while running:
     for circle in circles:
         draw_white_circle(screen, circle["center"], circle["radius"])
 
+    for circle in left_circles:
+        draw_black_circle(screen, circle["center"], circle["radius"])
+
+    for circle in right_circles:
+        draw_black_circle(screen, circle["center"], circle["radius"])
+
     if not stop_movement:
-        for circle in left_circles:
-            draw_black_circle(screen, circle["center"], circle["radius"])
-
-        for circle in left_circles:
-            draw_black_circle(screen, circle["center"], circle["radius"])
-
         update_position(left_circles, 369, 400, 150, 300)
-
-        for circle in right_circles:
-            draw_black_circle(screen, circle["center"], circle["radius"])
-
         update_position(right_circles, 405, 436, 150, 300)
 
         for rect in squares:
@@ -130,16 +122,28 @@ while running:
         rotated_hand_rect = rotated_hand_surface.get_rect(midbottom=(335, 370))
 
         screen.blit(rotated_hand_surface, rotated_hand_rect)
+    else:
+        rotated_hand_surface = pygame.transform.rotate(hand_surface, angle)
+        rotated_hand_rect = rotated_hand_surface.get_rect(midbottom=(335, 370))
+        screen.blit(rotated_hand_surface, rotated_hand_rect)
 
+    # Проверка времени появления облачка
     current_time = time.time()
-    if current_time - last_bubble_time >= bubble_interval:
+    if current_time >= bubble_appear_time:
         show_bubble = True
         stop_movement = True
+        # Останавливаем движение circles
+        for circle in left_circles:
+            circle['speed_x'] = 0
+            circle['speed_y'] = 0
+        for circle in right_circles:
+            circle['speed_x'] = 0
+            circle['speed_y'] = 0
 
+    # Отрисовка облачка с текстом "HI"
     if show_bubble:
-        draw_speech_bubble(screen, (475, 185), "'Привет!'", font, (0, 0, 0), (255, 255, 255))
+        draw_speech_bubble(screen, (350, 200), "HI", font, (0, 0, 0), (255, 255, 255))
 
     pygame.display.flip()
 
 pygame.quit()
-
