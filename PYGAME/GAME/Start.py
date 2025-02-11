@@ -91,7 +91,9 @@ font = pygame.font.Font(None, 45)  # Вы можете изменить разм
 
 show_bubble = False
 bubble_interval = 3.72
-last_bubble_time = time.time()
+bubble_display_duration = 2  # Длительность отображения облачка в секундах
+bubble_appear_time = time.time() + bubble_interval
+bubble_disappear_time = None
 
 stop_movement = False
 
@@ -138,12 +140,11 @@ while running:
         screen.blit(rotated_hand_surface, rotated_hand_rect)
         angle = 120
 
-
-
     current_time = time.time()
-    if current_time - last_bubble_time >= bubble_interval:
+    if current_time >= bubble_appear_time and not show_bubble:
         show_bubble = True
         stop_movement = True
+        bubble_disappear_time = current_time + bubble_display_duration
         for circle in left_circles:
             circle['speed_x'] = 0
             circle['speed_y'] = 0
@@ -154,8 +155,12 @@ while running:
 
     if show_bubble:
         draw_speech_bubble(screen, (475, 185), "'Привет!'", font, (0, 0, 0), (255, 255, 255))
+        if current_time >= bubble_disappear_time:
+            show_bubble = False
+            stop_movement = True
+        bubble_appear_time = current_time + bubble_interval
+
 
     pygame.display.flip()
 
 pygame.quit()
-
