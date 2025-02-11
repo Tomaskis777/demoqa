@@ -160,7 +160,6 @@ while running:
             stop_movement = True
         bubble_appear_time = current_time + bubble_interval
 
-
     pygame.display.flip()
 
 pygame.quit()
