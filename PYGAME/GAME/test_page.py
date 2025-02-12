@@ -39,11 +39,11 @@ def draw_speech_bubble(screen, position, text, font, text_color, bg_color):
 def update_position(objects, min_x, max_x, min_y, max_y):
     for obj in objects:
         obj['center'][0] += obj['speed_x']
-        obj['center'][1'] += obj['speed_y']
+        obj['center'][1] += obj['speed_y']
 
         if obj['center'][0] > max_x - obj["radius"] or obj['center'][0] < min_x + obj["radius"]:
             obj["speed_x"] = -obj["speed_x"]
-        if obj['center'][1'] > max_y - obj["radius"] or obj['center'][1] < min_y + obj["radius"]:
+        if obj['center'][1] > max_y - obj["radius"] or obj['center'][1] < min_y + obj["radius"]:
             obj["speed_y"] = -obj["speed_y"]
 
 circles = [
@@ -84,10 +84,16 @@ font = pygame.font.Font(None, 36)  # Вы можете изменить разм
 
 # Переменные для управления появлением облачка
 show_bubble = False
-bubble_interval = 3  # Промежуток времени в секундах до появления облачка
-bubble_display_duration = 2  # Длительность отображения облачка в секундах
+bubble_displayed = False  # Новый флаг, чтобы отслеживать, было ли облачко показано
+second_bubble_displayed = False  # Флаг для отслеживания второго облачка
+bubble_interval = 3  # Промежуток времени в секундах до появления первого облачка
+bubble_display_duration = 2  # Длительность отображения первого облачка в секундах
 bubble_appear_time = time.time() + bubble_interval
 bubble_disappear_time = None
+
+second_bubble_display_duration = 3  # Длительность отображения второго облачка в секундах
+second_bubble_appear_time = None
+second_bubble_disappear_time = None
 
 # Переменные для остановки движения
 stop_movement = False
@@ -129,11 +135,12 @@ while running:
         rotated_hand_rect = rotated_hand_surface.get_rect(midbottom=(335, 370))
         screen.blit(rotated_hand_surface, rotated_hand_rect)
 
-    # Проверка времени появления облачка
+    # Проверка времени появления первого облачка
     current_time = time.time()
-    if current_time >= bubble_appear_time and not show_bubble:
+    if current_time >= bubble_appear_time and not bubble_displayed:
         show_bubble = True
         stop_movement = True
+        bubble_displayed = True  # Устанавливаем флаг, что первое облачко было показано
         bubble_disappear_time = current_time + bubble_display_duration
         # Останавливаем движение circles
         for circle in left_circles:
@@ -143,12 +150,23 @@ while running:
             circle['speed_x'] = 0
             circle['speed_y'] = 0
 
-    # Отрисовка облачка с текстом "HI"
+    # Отрисовка первого облачка с текстом "HI"
     if show_bubble:
         draw_speech_bubble(screen, (350, 200), "HI", font, (0, 0, 0), (255, 255, 255))
         if current_time >= bubble_disappear_time:
             show_bubble = False
-            # Движение объектов не возобновляется, они остаются остановленными
+            second_bubble_appear_time = current_time + 1  # Задаем время появления второго облачка через 1 секунду
+
+    # Проверка времени появления второго облачка
+    if second_bubble_appear_time and current_time >= second_bubble_appear_time and not second_bubble_displayed:
+        second_bubble_displayed = True
+        second_bubble_disappear_time = current_time + second_bubble_display_duration
+
+    # Отрисовка второго облачка с текстом "HELLO" для ответа
+    if second_bubble_displayed:
+        draw_speech_bubble(screen, (350, 200), "HELLO", font, (0, 0, 0), (255, 255, 255))
+        if current_time >= second_bubble_disappear_time:
+            second_bubble_displayed = False
 
     pygame.display.flip()
 

@@ -90,11 +90,16 @@ pygame.display.set_caption("Моя первая игра")
 font = pygame.font.Font(None, 45)  # Вы можете изменить размер шрифта по необходимости
 
 show_bubble = False
+bubble_displayed = False
+second_bubble_displayed = False  # Флаг для отслеживания второго облачка
 bubble_interval = 3.72
 bubble_display_duration = 2  # Длительность отображения облачка в секундах
 bubble_appear_time = time.time() + bubble_interval
 bubble_disappear_time = None
 
+second_bubble_display_duration = 3  # Длительность отображения второго облачка в секундах
+second_bubble_appear_time = None
+second_bubble_disappear_time = None
 stop_movement = False
 
 running = True
@@ -141,9 +146,10 @@ while running:
         angle = 120
 
     current_time = time.time()
-    if current_time >= bubble_appear_time and not show_bubble:
+    if current_time >= bubble_appear_time and not bubble_displayed:
         show_bubble = True
         stop_movement = True
+        bubble_displayed = True
         bubble_disappear_time = current_time + bubble_display_duration
         for circle in left_circles:
             circle['speed_x'] = 0
@@ -157,8 +163,18 @@ while running:
         draw_speech_bubble(screen, (475, 185), "'Привет!'", font, (0, 0, 0), (255, 255, 255))
         if current_time >= bubble_disappear_time:
             show_bubble = False
-            stop_movement = True
-        bubble_appear_time = current_time + bubble_interval
+            second_bubble_appear_time = current_time + 1  # Задаем время появления второго облачка через 1 секунду
+
+    # Проверка времени появления второго облачка
+    if second_bubble_appear_time and current_time >= second_bubble_appear_time and not second_bubble_displayed:
+        second_bubble_displayed = True
+        second_bubble_disappear_time = current_time + second_bubble_display_duration
+
+    # Отрисовка второго облачка с текстом "HELLO" для ответа
+    if second_bubble_displayed:
+        draw_speech_bubble(screen, (475, 185), "' '", font, (0, 0, 0), (255, 255, 255))
+        if current_time >= second_bubble_disappear_time:
+            second_bubble_displayed = False
 
     pygame.display.flip()
 
