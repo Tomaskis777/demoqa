@@ -102,11 +102,24 @@ second_bubble_appear_time = None
 second_bubble_disappear_time = None
 stop_movement = False
 
+# Переменная для ввода текста пользователем
+input_text = ""
+input_active = False
+
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            if input_active:
+                if event.key == pygame.K_RETURN:
+                    input_active = False
+                    second_bubble_displayed = False
+                elif event.key == pygame.K_BACKSPACE:
+                    input_text = input_text[:-1]
+                else:
+                    input_text += event.unicode
 
     screen.fill((0, 0, 255))
 
@@ -168,14 +181,17 @@ while running:
     # Проверка времени появления второго облачка
     if second_bubble_appear_time and current_time >= second_bubble_appear_time and not second_bubble_displayed:
         second_bubble_displayed = True
-        second_bubble_disappear_time = current_time + second_bubble_display_duration
+        input_active = True
 
-    # Отрисовка второго облачка с текстом "HELLO" для ответа
+    # # Отрисовка второго облачка с текстом "HELLO" для ответа
+    # if second_bubble_displayed:
+    #     draw_speech_bubble(screen, (475, 185), "' '", font, (0, 0, 0), (255, 255, 255))
+    #     if current_time >= second_bubble_disappear_time:
+    #         second_bubble_displayed = False
+
+    # Отрисовка второго облачка для ввода ответа
     if second_bubble_displayed:
-        draw_speech_bubble(screen, (475, 185), "' '", font, (0, 0, 0), (255, 255, 255))
-        if current_time >= second_bubble_disappear_time:
-            second_bubble_displayed = False
-
+        draw_speech_bubble(screen, (190, 520), "Введите приветствие: " + input_text, font, (0, 0, 0), (255, 255, 255))
     pygame.display.flip()
 
 pygame.quit()
