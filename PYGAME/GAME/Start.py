@@ -1,7 +1,14 @@
 import pygame
+import threading
 import time
 
 pygame.init()
+
+# Переменные для управления вторым облачком
+second_bubble_displayed = False
+input_text = ""
+input_active = False
+second_bubble_shown_once = False
 
 
 def draw_white_circle(screen, center, radius): #туловище снеговика
@@ -52,6 +59,18 @@ def update_position(objects, min_x, max_x, min_y, max_y):
         if obj['center'][1] > max_y - obj["radius"] or obj['center'][1] < min_y + obj["radius"]:
             obj["speed_y"] = -obj["speed_y"]
 
+def show_second_bubble():
+    global second_bubble_displayed, input_active, second_bubble_shown_once
+    second_bubble_displayed = True
+    input_active = True
+    second_bubble_shown_once = True  # Устанавливаем флаг, что облачко уже было показано
+    threading.Timer(5.0, hide_second_bubble).start()  # Таймер для скрытия облачка через 5 секунд
+
+def hide_second_bubble():
+    global second_bubble_displayed, input_active, input_text
+    second_bubble_displayed = False
+    input_active = False
+    input_text = ""  # Сбрасываем введенный текст
 
 circles = [
     {"center": (400, 200), "radius": 50},
@@ -91,20 +110,14 @@ font = pygame.font.Font(None, 45)  # Вы можете изменить разм
 
 show_bubble = False
 bubble_displayed = False
-second_bubble_displayed = False  # Флаг для отслеживания второго облачка
 bubble_interval = 3.72
 bubble_display_duration = 2  # Длительность отображения облачка в секундах
 bubble_appear_time = time.time() + bubble_interval
 bubble_disappear_time = None
 
-second_bubble_display_duration = 3  # Длительность отображения второго облачка в секундах
 second_bubble_appear_time = None
-second_bubble_disappear_time = None
-stop_movement = False
 
-# Переменная для ввода текста пользователем
-input_text = ""
-input_active = False
+stop_movement = False
 
 running = True
 while running:
@@ -113,10 +126,7 @@ while running:
             running = False
         if event.type == pygame.KEYDOWN:
             if input_active:
-                if event.key == pygame.K_RETURN:
-                    input_active = False
-                    second_bubble_displayed = False
-                elif event.key == pygame.K_BACKSPACE:
+                if event.key == pygame.K_BACKSPACE:
                     input_text = input_text[:-1]
                 else:
                     input_text += event.unicode
@@ -149,7 +159,6 @@ while running:
 
         rotated_hand_surface = pygame.transform.rotate(hand_surface, angle)
         rotated_hand_rect = rotated_hand_surface.get_rect(midbottom=(335, 370))
-
         screen.blit(rotated_hand_surface, rotated_hand_rect)
 
     else:
@@ -170,28 +179,22 @@ while running:
         for circle in right_circles:
             circle['speed_x'] = 0
             circle['speed_y'] = 0
-        last_bubble_time = current_time
 
+        # Отрисовка первого облачка с текстом "HI"
     if show_bubble:
-        draw_speech_bubble(screen, (475, 185), "'Привет!'", font, (0, 0, 0), (255, 255, 255))
+        draw_speech_bubble(screen, (475, 185), "Привет", font, (0, 0, 0), (255, 255, 255))
         if current_time >= bubble_disappear_time:
             show_bubble = False
             second_bubble_appear_time = current_time + 1  # Задаем время появления второго облачка через 1 секунду
 
     # Проверка времени появления второго облачка
-    if second_bubble_appear_time and current_time >= second_bubble_appear_time and not second_bubble_displayed:
-        second_bubble_displayed = True
-        input_active = True
-
-    # Отрисовка второго облачка с текстом "HELLO" для ответа
-    if second_bubble_displayed:
-        draw_speech_bubble(screen, (475, 185), "' '", font, (0, 0, 0), (255, 255, 255))
-        if current_time >= second_bubble_disappear_time:
-            second_bubble_displayed = False
+    if second_bubble_appear_time and current_time >= second_bubble_appear_time and not second_bubble_shown_once:
+        show_second_bubble()  # Показ второго облачка и установка таймера
 
     # Отрисовка второго облачка для ввода ответа
     if second_bubble_displayed:
-        draw_speech_bubble(screen, (190, 520), "Введите приветствие: " + input_text, font, (0, 0, 0), (255, 255, 255))
+        draw_speech_bubble(screen, (190, 520), "Введите приветствие: " + input_text, font, (0, 0, 0),(255, 255, 255))
+
     pygame.display.flip()
 
 pygame.quit()

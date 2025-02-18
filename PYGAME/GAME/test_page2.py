@@ -4,11 +4,13 @@ import time
 
 pygame.init()
 
-# Переменные для управления вторым облачком
+# Переменные для управления облачками
 second_bubble_displayed = False
+third_bubble_displayed = False
 input_text = ""
 input_active = False
 second_bubble_shown_once = False  # Флаг для отслеживания, было ли второе облачко уже показано
+second_bubble_prevent_repeat = False  # Флаг для предотвращения повторного появления
 
 def draw_white_circle(screen, center, radius):
     white = (255, 255, 255)
@@ -54,10 +56,11 @@ def update_position(objects, min_x, max_x, min_y, max_y):
             obj["speed_y"] = -obj["speed_y"]
 
 def show_second_bubble():
-    global second_bubble_displayed, input_active, second_bubble_shown_once
+    global second_bubble_displayed, input_active, second_bubble_shown_once, second_bubble_prevent_repeat
     second_bubble_displayed = True
     input_active = True
     second_bubble_shown_once = True  # Устанавливаем флаг, что облачко уже было показано
+    second_bubble_prevent_repeat = True  # Устанавливаем флаг для предотвращения повторного появления
     threading.Timer(5.0, hide_second_bubble).start()  # Таймер для скрытия облачка через 5 секунд
 
 def hide_second_bubble():
@@ -65,6 +68,15 @@ def hide_second_bubble():
     second_bubble_displayed = False
     input_active = False
     input_text = ""  # Сбрасываем введенный текст
+    show_third_bubble()  # Отображаем третье облачко
+
+def show_third_bubble():
+    global third_bubble_displayed
+    third_bubble_displayed = True
+
+def hide_third_bubble():
+    global third_bubble_displayed
+    third_bubble_displayed = False
 
 circles = [
     {"center": (400, 200), "radius": 50},
@@ -180,15 +192,21 @@ while running:
             show_bubble = False
             second_bubble_appear_time = current_time + 1  # Задаем время появления второго облачка через 1 секунду
 
-    # Проверка времени появления второго облачка
-    if second_bubble_appear_time and current_time >= second_bubble_appear_time and not second_bubble_shown_once:
+        # Проверка времени появления второго облачка
+    if second_bubble_appear_time and current_time >= second_bubble_appear_time and not second_bubble_shown_once and not second_bubble_prevent_repeat:
         show_second_bubble()  # Показ второго облачка и установка таймера
 
-    # Отрисовка второго облачка для ввода ответа
+        # Отрисовка второго облачка для ввода ответа
     if second_bubble_displayed:
-        draw_speech_bubble(screen, (350, 200), "Введите приветствие: " + input_text, font, (0, 0, 0), (255, 255, 255))
+        draw_speech_bubble(screen, (350, 200), "Введите приветствие: " + input_text, font, (0, 0, 0),
+                               (255, 255, 255))
+
+        # Отрисовка третьего облачка с предложением сыграть в игру "ЧИСЛА"
+    if third_bubble_displayed:
+        draw_speech_bubble(screen, (350, 200), "Хотите сыграть в игру 'ЧИСЛА'?", font, (0, 0, 0), (255, 255, 255))
 
     pygame.display.flip()
 
 pygame.quit()
+
 
