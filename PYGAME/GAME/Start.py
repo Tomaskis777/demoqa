@@ -6,9 +6,11 @@ pygame.init()
 
 # Переменные для управления вторым облачком
 second_bubble_displayed = False
+third_bubble_displayed = False
 input_text = ""
 input_active = False
 second_bubble_shown_once = False
+third_bubble_shown_once = False
 
 
 def draw_white_circle(screen, center, radius): #туловище снеговика
@@ -67,10 +69,26 @@ def show_second_bubble():
     threading.Timer(5.0, hide_second_bubble).start()  # Таймер для скрытия облачка через 5 секунд
 
 def hide_second_bubble():
-    global second_bubble_displayed, input_active, input_text
+    global second_bubble_displayed, input_active, input_text,  third_bubble_appear_time
     second_bubble_displayed = False
     input_active = False
     input_text = ""  # Сбрасываем введенный текст
+    third_bubble_appear_time = time.time() + 2
+
+def show_third_bubble():
+    global third_bubble_displayed, input_active, third_bubble_shown_once
+    third_bubble_displayed = True
+    input_active = True  #Отключаем ввод текста пользователем
+    third_bubble_shown_once = True  # Устанавливаем флаг, что облачко уже было показано
+    threading.Timer(5.0, hide_third_bubble).start()
+
+
+def hide_third_bubble():
+    global third_bubble_displayed, input_active, input_text
+    third_bubble_displayed = False
+    input_active = False
+    input_text = ""  # Сбрасываем введенный текст
+
 
 circles = [
     {"center": (400, 200), "radius": 50},
@@ -106,7 +124,7 @@ screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Моя первая игра")
 
 # Настройка шрифта для облачка
-font = pygame.font.Font(None, 45)  # Вы можете изменить размер шрифта по необходимости
+font = pygame.font.Font(None, 40)  # Вы можете изменить размер шрифта по необходимости
 
 show_bubble = False
 bubble_displayed = False
@@ -116,6 +134,7 @@ bubble_appear_time = time.time() + bubble_interval
 bubble_disappear_time = None
 
 second_bubble_appear_time = None
+third_bubble_appear_time = None
 
 stop_movement = False
 
@@ -194,6 +213,15 @@ while running:
     # Отрисовка второго облачка для ввода ответа
     if second_bubble_displayed:
         draw_speech_bubble(screen, (190, 520), "Введите приветствие: " + input_text, font, (0, 0, 0),(255, 255, 255))
+
+    # Проверка времени появления второго облачка
+    if third_bubble_appear_time and current_time >= third_bubble_appear_time and not third_bubble_shown_once:
+        show_third_bubble()  # Показ третьего облачка и установка таймера
+
+    # Отрисовка треьбего облачка для ввода ответа
+    if third_bubble_displayed:
+        draw_speech_bubble(screen, (60, 520), "Хотите сыграть в игру 'Угадай число'? Ответ: " + input_text, font, (0, 0, 0), (255, 255, 255))
+        third_bubble_appear_time = current_time + 1 #!СЮДА! ВПИСАТЬ ЦИКЛ ИГРЫ УГАДАЙ ЧИСЛО
 
     pygame.display.flip()
 
