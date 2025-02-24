@@ -7,6 +7,7 @@ pygame.init()
 # Переменные для управления вторым облачком
 second_bubble_displayed = False
 third_bubble_displayed = False
+guess_number_bubble_displayed = False
 input_text = ""
 input_active = False
 second_bubble_shown_once = False

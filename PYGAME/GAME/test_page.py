@@ -110,19 +110,29 @@ def hide_guess_number_bubble():
     input_text = ""  # Сбрасываем введенный текст
 
 
-def handle_guessing_game():
-    global input_text, correct_number, guessing_game_active
-    guessed_number = int(input_text)
-    if guessed_number == correct_number:
+# def check_guess():
+#     global guess_number_bubble_displayed, input_active, input_text
+#     if input_text.isdigit():
+#         if int(input_text) == correct_number:
+#             hide_guess_number_bubble()
+#             draw_speech_bubble(screen, (350, 200), "Вы победили! Продолжить?", font, (0, 0, 0), (255, 255, 255))
+#         else:
+#             hide_guess_number_bubble()
+#             draw_speech_bubble(screen, (350, 200), "Ответ неверный, продолжить игру?", font, (0, 0, 0), (255, 255, 255))
+
+
+def check_guess(correct):
+    global guess_number_bubble_displayed, input_active, input_text
+    if correct:
+        guess_number_bubble_displayed = False
+        input_active = False
+        input_text = ""
         draw_speech_bubble(screen, (350, 200), "Вы победили! Продолжить?", font, (0, 0, 0), (255, 255, 255))
-        if input_text.lower() == "да":
-            correct_number = random.randint(1, 5)
-        else:
-            guessing_game_active = False
     else:
-        draw_speech_bubble(screen, (350, 200), "Ответ не верный, продолжить игру?", font, (0, 0, 0), (255, 255, 255))
-        if input_text.lower() == "нет":
-            guessing_game_active = False
+        guess_number_bubble_displayed = False
+        input_active = False
+        input_text = ""
+        draw_speech_bubble(screen, (350, 200), "Ответ неверный, продолжить игру?", font, (0, 0, 0), (255, 255, 255))
 
 
 circles = [
@@ -189,6 +199,9 @@ while running:
                     input_text = input_text[:-1]
                 else:
                     input_text += event.unicode
+                if guess_number_bubble_displayed and event.key == pygame.K_RETURN:
+                    input_active = False
+                    threading.Timer(2.0, check_guess).start()  # Пауза перед проверкой числа
 
     screen.fill((0, 0, 255))
 
@@ -275,26 +288,9 @@ while running:
         draw_speech_bubble(screen, (190, 520), "Угадайте число: " + input_text, font, (0, 0, 0), (255, 255, 255))
         if input_text.isdigit():
             if int(input_text) == correct_number:
-                hide_guess_number_bubble()
-                threading.Timer(2.0, lambda: draw_speech_bubble(screen, (350, 200), "Вы победили! Продолжить?", font, (0, 0, 0), (255, 255, 255))).start()
-                if input_text.lower() == "да":
-                    input_text = ""
-                    third_bubble_displayed = False
-                    second_bubble_displayed = False
-                    stop_movement = False
-                    bubble_displayed = False
-                    show_bubble = False
-                    correct_number = random.randint(1, 5)
-                elif input_text.lower() == "нет":
-                    running = False
+                threading.Timer(2.0, lambda: check_guess(True)).start()
             else:
-                hide_guess_number_bubble()
-                threading.Timer(2.0, lambda: draw_speech_bubble(screen, (350, 200), "Ответ неверный, продолжить игру?", font, (0, 0, 0), (255, 255, 255))).start()
-                if input_text.lower() == "да":
-                    input_text = ""
-                    show_guess_number_bubble()
-                elif input_text.lower() == "нет":
-                    running = False
+                threading.Timer(2.0, lambda: check_guess(False)).start()
 
     pygame.display.flip()
 
