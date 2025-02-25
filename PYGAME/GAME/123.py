@@ -134,6 +134,7 @@ def check_guess(correct):
         show_error_bubble()
     continue_game = True  # Активируем ввод для продолжения игры
 
+
 circles = [
     {"center": (400, 200), "radius": 50},
     {"center": (400, 300), "radius": 70},
@@ -183,8 +184,6 @@ guess_number_bubble_appear_time = float('inf')  # Инициализируем �
 
 stop_movement = False
 # number_to_guess = 3  # Загаданное число
-
-guess_number_bubble_displayed = False  #Переменная для управления облачком угадывания числа
 
 running = True
 while running:

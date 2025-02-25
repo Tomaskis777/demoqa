@@ -8,6 +8,8 @@ pygame.init()
 # Переменные для управления облачками
 second_bubble_displayed = False
 third_bubble_displayed = False
+win_bubble_displayed = False
+error_bubble_displayed = False
 input_text = ""
 input_active = False
 second_bubble_shown_once = False
@@ -110,30 +112,38 @@ def hide_guess_number_bubble():
     input_text = ""  # Сбрасываем введенный текст
 
 
-# def check_guess():
-#     global guess_number_bubble_displayed, input_active, input_text
-#     if input_text.isdigit():
-#         if int(input_text) == correct_number:
-#             hide_guess_number_bubble()
-#             draw_speech_bubble(screen, (350, 200), "Вы победили! Продолжить?", font, (0, 0, 0), (255, 255, 255))
-#         else:
-#             hide_guess_number_bubble()
-#             draw_speech_bubble(screen, (350, 200), "Ответ неверный, продолжить игру?", font, (0, 0, 0), (255, 255, 255))
+def show_win_bubble():
+    global win_bubble_displayed, input_active
+    win_bubble_displayed = True
+    input_active = True
+
+def hide_win_bubble():
+    global win_bubble_displayed, input_active, input_text
+    win_bubble_displayed = False
+    input_active = False
+    input_text = ""  # Сбрасываем введенный текст
+
+def show_error_bubble():
+    global error_bubble_displayed, input_active
+    error_bubble_displayed = True
+    input_active = True
+
+def hide_error_bubble():
+    global error_bubble_displayed, input_active, input_text
+    error_bubble_displayed = False
+    input_active = False
+    input_text = ""  # Сбрасываем введенный текст
 
 
 def check_guess(correct):
-    global guess_number_bubble_displayed, input_active, input_text
+    global guess_number_bubble_displayed, input_active, input_text, continue_game
     if correct:
-        guess_number_bubble_displayed = False
-        input_active = False
-        input_text = ""
-        draw_speech_bubble(screen, (350, 200), "Вы победили! Продолжить?", font, (0, 0, 0), (255, 255, 255))
+        hide_guess_number_bubble()
+        show_win_bubble()
     else:
-        guess_number_bubble_displayed = False
-        input_active = False
-        input_text = ""
-        draw_speech_bubble(screen, (350, 200), "Ответ неверный, продолжить игру?", font, (0, 0, 0), (255, 255, 255))
-
+        hide_guess_number_bubble()
+        show_error_bubble()
+    continue_game = True  # Активируем ввод для продолжения игры
 
 circles = [
     {"center": (400, 200), "radius": 50},
@@ -291,6 +301,26 @@ while running:
                 threading.Timer(2.0, lambda: check_guess(True)).start()
             else:
                 threading.Timer(2.0, lambda: check_guess(False)).start()
+
+    if win_bubble_displayed:
+        draw_speech_bubble(screen, (170, 520), "Вы победили! Продолжить?", font, (0, 0, 0), (255, 255, 255))
+        if input_text.lower() == "да":
+            input_text = ""
+            win_bubble_displayed = False
+            input_active = False
+            show_guess_number_bubble()  # Снова запускаем игру
+        elif input_text.lower() == "нет":
+            running = False
+
+    if error_bubble_displayed:
+        draw_speech_bubble(screen, (170, 520), "Ответ неверный, продолжить игру?", font, (0, 0, 0), (255, 255, 255))
+        if input_text.lower() == "да":
+            input_text = ""
+            error_bubble_displayed = False
+            input_active = False
+            show_guess_number_bubble()  # Снова запускаем игру
+        elif input_text.lower() == "нет":
+            running = False
 
     pygame.display.flip()
 
