@@ -124,6 +124,18 @@ def handle_guessing_game():
         if input_text.lower() == "нет":
             guessing_game_active = False
 
+def check_guess(correct):
+    global guess_number_bubble_displayed, input_active, input_text
+    if correct:
+        guess_number_bubble_displayed = False
+        input_active = False
+        input_text = ""
+        draw_speech_bubble(screen, (350, 200), "Вы победили! Продолжить?", font, (0, 0, 0), (255, 255, 255))
+    else:
+        guess_number_bubble_displayed = False
+        input_active = False
+        input_text = ""
+        draw_speech_bubble(screen, (350, 200), "Ответ неверный, продолжить игру?", font, (0, 0, 0), (255, 255, 255))
 
 circles = [
     {"center": (400, 200), "radius": 50},
@@ -275,26 +287,9 @@ while running:
         draw_speech_bubble(screen, (190, 520), "Угадайте число: " + input_text, font, (0, 0, 0), (255, 255, 255))
         if input_text.isdigit():
             if int(input_text) == correct_number:
-                hide_guess_number_bubble()
-                threading.Timer(2.0, lambda: draw_speech_bubble(screen, (350, 200), "Вы победили! Продолжить?", font, (0, 0, 0), (255, 255, 255))).start()
-                if input_text.lower() == "да":
-                    input_text = ""
-                    third_bubble_displayed = False
-                    second_bubble_displayed = False
-                    stop_movement = False
-                    bubble_displayed = False
-                    show_bubble = False
-                    correct_number = random.randint(1, 5)
-                elif input_text.lower() == "нет":
-                    running = False
+                threading.Timer(2.0, lambda: check_guess(True)).start()
             else:
-                hide_guess_number_bubble()
-                threading.Timer(2.0, lambda: draw_speech_bubble(screen, (350, 200), "Ответ неверный, продолжить игру?", font, (0, 0, 0), (255, 255, 255))).start()
-                if input_text.lower() == "да":
-                    input_text = ""
-                    show_guess_number_bubble()
-                elif input_text.lower() == "нет":
-                    running = False
+                threading.Timer(2.0, lambda: check_guess(False)).start()
 
     pygame.display.flip()
 
