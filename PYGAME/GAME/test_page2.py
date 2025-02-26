@@ -56,11 +56,11 @@ def draw_speech_bubble(screen, position, text, font, text_color, bg_color):
 def update_position(objects, min_x, max_x, min_y, max_y):
     for obj in objects:
         obj['center'][0] += obj['speed_x']
-        obj['center'][1] += obj['speed_y']
+        obj['center'][1'] += obj['speed_y']
 
         if obj['center'][0] > max_x - obj["radius"] or obj['center'][0] < min_x + obj["radius"]:
             obj["speed_x"] = -obj["speed_x"]
-        if obj['center'][1] > max_y - obj["radius"] or obj['center'][1] < min_y + obj["radius"]:
+        if obj['center'][1'] > max_y - obj["radius"] or obj['center'][1'] < min_y + obj["radius"]:
             obj["speed_y"] = -obj["speed_y"]
 
 def show_second_bubble():
@@ -182,9 +182,6 @@ third_bubble_appear_time = float('inf')  # Инициализируем знач
 guess_number_bubble_appear_time = float('inf')  # Инициализируем значение
 
 stop_movement = False
-# number_to_guess = 3  # Загаданное число
-
-guess_number_bubble_displayed = False  #Переменная для управления облачком угадывания числа
 
 running = True
 while running:
@@ -199,120 +196,135 @@ while running:
                     input_text += event.unicode
                 if guess_number_bubble_displayed and event.key == pygame.K_RETURN:
                     input_active = False
-                    threading.Timer(2.0, check_guess).start()  # Пауза перед проверкой числа
+                    threading.Timer(2.0, lambda: check_guess(input_text.isdigit() and int(input_text) == number_to_guess)).start()
+            if continue_game:
+                if event.key == pygame.K_BACKSPACE:
+                    input_text = input_text[:-1]
+                else:
+                    input_text += event.unicode
+                if event.key == pygame.K_RETURN:
+                    if input_text.lower
 
-    screen.fill((0, 0, 255))
+                        if input_text.lower() == "да":
+                            input_text = ""
+                            win_bubble_displayed = False
+                            error_bubble_displayed = False
+                            input_active = False
+                            show_guess_number_bubble()  # Снова запускаем игру
+                        elif input_text.lower() == "нет":
+                            running = False
+                            win_bubble_displayed = False
+                            error_bubble_displayed = False
+                            input_active = False
 
-    for circle in circles:
-        draw_white_circle(screen, circle["center"], circle["radius"])
+                    screen.fill((0, 0, 255))
 
-    for circle in left_circles:
-        draw_black_circle(screen, circle["center"], circle["radius"])
+                    for circle in circles:
+                        draw_white_circle(screen, circle["center"], circle["radius"])
 
-    update_position(left_circles, 369, 400, 150, 300)
+                    for circle in left_circles:
+                        draw_black_circle(screen, circle["center"], circle["radius"])
 
-    for circle in right_circles:
-        draw_black_circle(screen, circle["center"], circle["radius"])
+                    update_position(left_circles, 369, 400, 150, 300)
 
-    update_position(right_circles, 405, 436, 150, 300)
+                    for circle in right_circles:
+                        draw_black_circle(screen, circle["center"], circle["radius"])
 
-    for rect in squares:
-        draw_square(screen, rect["position"], rect["size"])
+                    update_position(right_circles, 405, 436, 150, 300)
 
-    if not stop_movement:
-        update_position(left_circles, 369, 400, 150, 300)
-        update_position(right_circles, 405, 436, 150, 300)
+                    for rect in squares:
+                        draw_square(screen, rect["position"], rect["size"])
 
-        angle += angle_speed
-        if angle >= 80 or angle <= 38:
-            angle_speed = -angle_speed
+                    if not stop_movement:
+                        update_position(left_circles, 369, 400, 150, 300)
+                        update_position(right_circles, 405, 436, 150, 300)
 
-        rotated_hand_surface = pygame.transform.rotate(hand_surface, angle)
-        rotated_hand_rect = rotated_hand_surface.get_rect(midbottom=(335, 370))
-        screen.blit(rotated_hand_surface, rotated_hand_rect)
+                        angle += angle_speed
+                        if angle >= 80 or angle <= 38:
+                            angle_speed = -angle_speed
 
-    else:
-        rotated_hand_surface = pygame.transform.rotate(hand_surface, angle)
-        rotated_hand_rect = rotated_hand_surface.get_rect(midbottom=(335, 445))
-        screen.blit(rotated_hand_surface, rotated_hand_rect)
-        angle = 120
+                        rotated_hand_surface = pygame.transform.rotate(hand_surface, angle)
+                        rotated_hand_rect = rotated_hand_surface.get_rect(midbottom=(335, 370))
+                        screen.blit(rotated_hand_surface, rotated_hand_rect)
 
-    current_time = time.time()
-    if current_time >= bubble_appear_time and not bubble_displayed:
-        show_bubble = True
-        stop_movement = True
-        bubble_displayed = True
-        bubble_disappear_time = current_time + bubble_display_duration
-        for circle in left_circles:
-            circle['speed_x'] = 0
-            circle['speed_y'] = 0
-        for circle in right_circles:
-            circle['speed_x'] = 0
-            circle['speed_y'] = 0
+                    else:
+                        rotated_hand_surface = pygame.transform.rotate(hand_surface, angle)
+                        rotated_hand_rect = rotated_hand_surface.get_rect(midbottom=(335, 445))
+                        screen.blit(rotated_hand_surface, rotated_hand_rect)
+                        angle = 120
 
-    if show_bubble:
-        draw_speech_bubble(screen, (475, 185), "Привет", font, (0, 0, 0), (255, 255, 255))
-        if current_time >= bubble_disappear_time:
-            show_bubble = False
-            second_bubble_appear_time = current_time + 1  # Задаем время появления второго облачка через 1 секунду
+                    current_time = time.time()
+                    if current_time >= bubble_appear_time and not bubble_displayed:
+                        show_bubble = True
+                        stop_movement = True
+                        bubble_displayed = True
+                        bubble_disappear_time = current_time + bubble_display_duration
+                        for circle in left_circles:
+                            circle['speed_x'] = 0
+                            circle['speed_y'] = 0
+                        for circle in right_circles:
+                            circle['speed_x'] = 0
+                            circle['speed_y'] = 0
 
-    if second_bubble_appear_time and current_time >= second_bubble_appear_time and not second_bubble_shown_once:
-        show_second_bubble()  # Показ второго облачка и установка таймера
+                    if show_bubble:
+                        draw_speech_bubble(screen, (475, 185), "Привет", font, (0, 0, 0), (255, 255, 255))
+                        if current_time >= bubble_disappear_time:
+                            show_bubble = False
+                            second_bubble_appear_time = current_time + 1  # Задаем время появления второго облачка через 1 секунду
 
-    if second_bubble_displayed:
-        draw_speech_bubble(screen, (190, 520), "Введите приветствие: " + input_text, font, (0, 0, 0), (255, 255, 255))
-        if input_text.lower() == "да":
-            input_text = ""
-            second_bubble_displayed = False
-            input_active = False
-            show_third_bubble()
-        elif input_text.lower() == "нет":
-            running = False
+                    if second_bubble_appear_time and current_time >= second_bubble_appear_time and not second_bubble_shown_once:
+                        show_second_bubble()  # Показ второго облачка и установка таймера
 
-    if third_bubble_appear_time and current_time >= third_bubble_appear_time and not third_bubble_shown_once:
-        show_third_bubble()  # Показ третьего облачка и установка таймера
+                    if second_bubble_displayed:
+                        draw_speech_bubble(screen, (190, 520), "Введите приветствие: " + input_text, font, (0, 0, 0),
+                                           (255, 255, 255))
+                        if input_text.lower() == "да":
+                            input_text = ""
+                            second_bubble_displayed = False
+                            input_active = False
+                            show_third_bubble()
+                        elif input_text.lower() == "нет":
+                            running = False
 
-    if third_bubble_displayed:
-        draw_speech_bubble(screen, (350, 200), "Хотите сыграть в игру 'Угадай число'?", font, (0, 0, 0),
-                           (255, 255, 255))
-        if input_text.lower() == "да":
-            input_text = ""
-            third_bubble_displayed = False
-            input_active = True  # Активируем ввод текста пользователем
-            show_guess_number_bubble()
-        elif input_text.lower() == "нет":
-            running = False
+                    if third_bubble_appear_time and current_time >= third_bubble_appear_time and not third_bubble_shown_once:
+                        show_third_bubble()  # Показ третьего облачка и установка таймера
 
-    if guess_number_bubble_displayed:
-        draw_speech_bubble(screen, (190, 520), "Угадайте число: " + input_text, font, (0, 0, 0), (255, 255, 255))
-        if input_text.isdigit():
-            if int(input_text) == number_to_guess:
-                threading.Timer(2.0, lambda: check_guess(True)).start()
-            else:
-                threading.Timer(2.0, lambda: check_guess(False)).start()
+                    if third_bubble_displayed:
+                        draw_speech_bubble(screen, (350, 200), "Хотите сыграть в игру 'Угадай число'?", font, (0, 0, 0),
+                                           (255, 255, 255))
+                        threading.Timer(2.0, show_guess_number_bubble).start()  # Пауза перед показом облачка
 
-    if win_bubble_displayed:
-        draw_speech_bubble(screen, (350, 200), "Вы победили! Продолжить?", font, (0, 0, 0), (255, 255, 255))
-        if input_text.lower() == "да":
-            input_text = ""
-            win_bubble_displayed = False
-            input_active = False
-            show_guess_number_bubble()  # Снова запускаем игру
-        elif input_text.lower() == "нет":
-            running = False
+                    if guess_number_bubble_displayed:
+                        draw_speech_bubble(screen, (190, 520), "Угадайте число: " + input_text, font, (0, 0, 0),
+                                           (255, 255, 255))
+                        if input_text.isdigit():
+                            if int(input_text) == number_to_guess:
+                                threading.Timer(2.0, lambda: check_guess(True)).start()
+                            else:
+                                threading.Timer(2.0, lambda: check_guess(False)).start()
 
-    if error_bubble_displayed:
-        draw_speech_bubble(screen, (350, 200), "Ответ неверный, продолжить игру?", font, (0, 0, 0), (255, 255, 255))
-        if input_text.lower() == "да":
-            input_text = ""
-            error_bubble_displayed = False
-            input_active = False
-            show_guess_number_bubble()  # Снова запускаем игру
-        elif input_text.lower() == "нет":
-            running = False
+                    if win_bubble_displayed:
+                        draw_speech_bubble(screen, (350, 200), "Вы победили! Продолжить?", font, (0, 0, 0),
+                                           (255, 255, 255))
+                        if input_text.lower() == "да":
+                            input_text = ""
+                            win_bubble_displayed = False
+                            input_active = False
+                            show_guess_number_bubble()  # Снова запускаем игру
+                        elif input_text.lower() == "нет":
+                            running = False
 
-pygame.display.flip()
+                    if error_bubble_displayed:
+                        draw_speech_bubble(screen, (350, 200), "Ответ неверный, продолжить игру?", font, (0, 0, 0),
+                                           (255, 255, 255))
+                        if input_text.lower() == "да":
+                            input_text = ""
+                            error_bubble_displayed = False
+                            input_active = False
+                            show_guess_number_bubble()  # Снова запускаем игру
+                        elif input_text.lower() == "нет":
+                            running = False
 
-pygame.quit()
+                    pygame.display.flip()
 
-
+                    pygame.quit()
