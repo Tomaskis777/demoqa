@@ -88,7 +88,7 @@ def show_third_bubble():
     third_bubble_displayed = True
     input_active = True  # Отключаем ввод текста пользователем
     third_bubble_shown_once = True  # Устанавливаем флаг, что облачко уже было показано
-    # threading.Timer(4.0, hide_third_bubble).start()  # Таймер для скрытия облачка через 2 секунды
+    threading.Timer(1, hide_third_bubble).start()  # Таймер для скрытия облачка через 2 секунды
 
 
 def hide_third_bubble():
@@ -96,7 +96,7 @@ def hide_third_bubble():
     third_bubble_displayed = False
     input_active = False
     input_text = ""  # Сбрасываем введенный текст
-    # guess_number_bubble_appear_time = time.time() + 4  # Пауза перед началом игры "Угадай число"
+    guess_number_bubble_appear_time = time.time() + 1  # Пауза перед началом игры "Угадай число"
 
 
 def show_guess_number_bubble():
@@ -179,18 +179,18 @@ screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Моя первая игра")
 
 # Настройка шрифта для облачка
-font = pygame.font.Font(None, 45)
+font = pygame.font.Font(None, 42)
 
 show_bubble = False
 bubble_displayed = False
-bubble_interval = 3.72
-bubble_display_duration = 2  # Длительность отображения облачка в секундах
+bubble_interval = 2.2
+bubble_display_duration = 3  # Длительность отображения облачка в секундах
 bubble_appear_time = time.time() + bubble_interval
 bubble_disappear_time = None
 
 second_bubble_appear_time = None
-third_bubble_appear_time = float('inf')  # Инициализируем значение
-guess_number_bubble_appear_time = float('inf')  # Инициализируем значение
+third_bubble_appear_time = None  # Инициализируем значение
+guess_number_bubble_appear_time = None  # Инициализируем значение
 
 stop_movement = False
 # number_to_guess = 3  # Загаданное число
@@ -263,10 +263,10 @@ while running:
             circle['speed_y'] = 0
 
     if show_bubble:
-        draw_speech_bubble(screen, (475, 185), "Привет", font, (0, 0, 0), (255, 255, 255))
+        draw_speech_bubble(screen, (475, 155), "Привет пидрила!", font, (0, 0, 0), (255, 255, 255))
         if current_time >= bubble_disappear_time:
             show_bubble = False
-            second_bubble_appear_time = current_time + 1  # Задаем время появления второго облачка через 1 секунду
+            second_bubble_appear_time = current_time + 2  # Задаем время появления второго облачка через 1 секунду
 
     if second_bubble_appear_time and current_time >= second_bubble_appear_time and not second_bubble_shown_once:
         show_second_bubble()  # Показ второго облачка и установка таймера
@@ -280,12 +280,14 @@ while running:
             show_third_bubble()
         elif input_text.lower() == "нет":
             running = False
+            third_bubble_appear_time = current_time + 3
 
     if third_bubble_appear_time and current_time >= third_bubble_appear_time and not third_bubble_shown_once:
         show_third_bubble()  # Показ третьего облачка и установка таймера
+        threading.Timer(3, show_guess_number_bubble).start()  # Пауза перед показом облачка
 
     if third_bubble_displayed:
-        draw_speech_bubble(screen, (100, 520), "Хотите сыграть в игру 'Угадай число'?: " + input_text, font, (0, 0, 0), (255, 255, 255))
+        draw_speech_bubble(screen, (25, 520), "Эй еблан, хошь сыграть в игру 'Угадай число'?: " + input_text, font, (0, 0, 0), (255, 255, 255))
         if input_text.lower() == "да":
             input_text = ""
             third_bubble_displayed = False
@@ -295,7 +297,7 @@ while running:
             running = False
 
     if guess_number_bubble_displayed:
-        draw_speech_bubble(screen, (190, 520), "Угадайте число: " + input_text, font, (0, 0, 0), (255, 255, 255))
+        draw_speech_bubble(screen, (175, 520), "Вводи число гидроцифал!: " + input_text, font, (0, 0, 0), (255, 255, 255))
         if input_text.isdigit():
             if int(input_text) == correct_number:
                 threading.Timer(2.0, lambda: check_guess(True)).start()
@@ -303,21 +305,23 @@ while running:
                 threading.Timer(2.0, lambda: check_guess(False)).start()
 
     if win_bubble_displayed:
-        draw_speech_bubble(screen, (170, 520), "Вы победили! Продолжить?", font, (0, 0, 0), (255, 255, 255))
+        draw_speech_bubble(screen, (120, 520), "Лан победил, педик! Давай еще игру?: " + input_text, font, (0, 0, 0), (255, 255, 255))
         if input_text.lower() == "да":
             input_text = ""
             win_bubble_displayed = False
             input_active = False
+            threading.Timer(2.0, show_guess_number_bubble).start()  # Пауза перед показом облачка
             show_guess_number_bubble()  # Снова запускаем игру
         elif input_text.lower() == "нет":
             running = False
 
     if error_bubble_displayed:
-        draw_speech_bubble(screen, (170, 520), "Ответ неверный, продолжить игру?", font, (0, 0, 0), (255, 255, 255))
+        draw_speech_bubble(screen, (80, 520), "Хер там, макака, неверно! Еще попытка?: " + input_text, font, (0, 0, 0), (255, 255, 255))
         if input_text.lower() == "да":
             input_text = ""
             error_bubble_displayed = False
             input_active = False
+            threading.Timer(2.0, show_guess_number_bubble).start()  # Пауза перед показом облачка
             show_guess_number_bubble()  # Снова запускаем игру
         elif input_text.lower() == "нет":
             running = False
@@ -325,4 +329,3 @@ while running:
     pygame.display.flip()
 
 pygame.quit()
-
